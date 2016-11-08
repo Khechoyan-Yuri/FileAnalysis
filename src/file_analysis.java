@@ -24,6 +24,7 @@ public class file_analysis {
 		String [] stringArray = new String[num_of_lines];
 		int i = 0;
 		
+		//incrementing the String Array
 		while(fileInput.hasNextLine()) {
 			stringArray[i] = fileInput.nextLine();
 			i++;
@@ -38,9 +39,9 @@ public class file_analysis {
 		int whitespaceCount = 0;
 		int uppercaseCount = 0;
 		for(i = 0; i<stringArray.length; i++) {
-			String [] wordArray = stringArray[i].split("[, . ; ]");
+			String [] wordArray = stringArray[i].split("[, . ; \\s]+");
 			wordCount +=wordArray.length;
-			String [] sentenceArray = stringArray[i].split("[. ; ]");
+			String [] sentenceArray = stringArray[i].split("[. ; ]+");
 			sentenceCount +=sentenceArray.length;
 			for(int j =0; j<stringArray[i].length(); j++) {
 				if(Character.isLetter(stringArray[i].charAt(j))) {
@@ -81,30 +82,39 @@ public class file_analysis {
 		
 		for(i=0; i<stringArrayList.size(); i++) {
 			for(int j=0; j<doubleArray[i].length; j++) {
-				if(doubleArray[j][0] != null && doubleArray[j][0].equals(stringArrayList.get(i))) {
+				if(doubleArray[i][0] != null && doubleArray[i][0].equals(stringArrayList.get(j))) {
 					ifDoesNotExist = false;
 				}
 			}
 			
 			if(ifDoesNotExist) {
 				doubleArray[place][0] = stringArrayList.get(i);
-				ifDoesNotExist =true;
 				place++;
 			}
+			
+			ifDoesNotExist = true;
 			
 		}
 		
 		for(i=0; i<stringArrayList.size(); i++) {
 			for(int j=0; j<doubleArray.length; j++) {
-				if(doubleArray[j][0] !=null && doubleArray[j][0].equals(stringArrayList.get(i))) {
+				if(doubleArray[i][0].equals(stringArrayList.get(j))) {
 					frequencyCount++;
 				}
 			}
 			doubleArray[i][1] = Integer.toString(frequencyCount++);
 			frequencyCount =0;
 		}
+			String[] trackWord = new String [100];
+			
 		
 		for(i =0; i<doubleArray.length; i++) {
+			for(int j = 0; j< trackWord.length; j++){
+				if(trackWord[i] != null && trackWord[i].equals(stringArrayList.get(j))) {
+					ifDoesNotExist = false;
+			}
+			
+			}
 			System.out.println(doubleArray[i][0]+": "+doubleArray[i][1]);
 		}
 		
