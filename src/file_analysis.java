@@ -176,9 +176,47 @@ public class file_analysis {
 		int uppercaseCount = countUpperCaseLetters(stringArray);
 		
 		String doubleArray[][] = CountWordFrequency(stringArrayList);
-
 		
+		int wordCounter = CountWords(stringArray);
+		
+		int digitCounter = CountDigits(stringArray);
+		
+		int alphCounter = countLetters(stringArray);
+		
+		int sentenceCounter = countSentences(stringArray);
+		
+		int punctCounter = countPunctuation(stringArray);
+		
+		int whitespaceCounter = countWhitespace(stringArray);
+		
+		int lineCounter = countLines(stringArray, inputFileName);
+
+		outputData(uppercaseCount, doubleArray, stringArray, wordCounter, digitCounter, alphCounter, sentenceCounter, punctCounter, whitespaceCounter, lineCounter);
 	}//Closes Main Method
+	
+	public static void outputData(int uppercaseCount,  String doubleArray[][], String [] stringArray, int wordCounter, int digitCounter, int alphCounter, int sentenceCounter, int punctCounter, int whitespaceCounter, int lineCounter){
+		
+		for(int i=0; i < stringArray.length; i++){
+			System.out.println(stringArray[i]);
+		}
+		
+		System.out.println("-----------------------------------------------------------");
+		
+		System.out.println("Total number of lines in the files: " +lineCounter);
+		System.out.println("Total number of words in the files: " +wordCounter);
+		System.out.println("Total number of sentences in the files: " +sentenceCounter);
+		System.out.println("Total number of punctuations in the files: " +punctCounter);
+		System.out.println("Total number of alphabets in the files: " +alphCounter);
+		System.out.println("Total number of digits in the files: " +digitCounter);
+		System.out.println("Total number of whitespaces in the files: " +whitespaceCounter);
+		System.out.println("Total number of uppercase in the files: " +uppercaseCount);
+		
+		System.out.println("-----------------------------------------------------------");
+		
+		for(int i=0; i < doubleArray.length; i++){
+			System.out.println(doubleArray[i][0]+": "+doubleArray[i][1]);
+		}
+	}
 	
 	public static String[] readInputFile (String inputFileName) throws IOException {
 		int num_of_lines = 0;
@@ -192,6 +230,7 @@ public class file_analysis {
 		}
 		fileCount.close();
 		
+		
 		Scanner fileInput = new Scanner(f);
 		String [] stringArray = new String[num_of_lines];
 		int i = 0;
@@ -204,6 +243,21 @@ public class file_analysis {
 		fileInput.close();
 		
 		return stringArray;
+	}
+	
+	public static int countLines(String [] stringArray, String inputFileName) throws IOException{
+			int num_of_lines = 0;
+			
+			File f = new File(inputFileName);
+			Scanner fileCount = new Scanner(f);
+			
+			while(fileCount.hasNextLine()) {
+				fileCount.nextLine();
+				num_of_lines++;
+			}
+			fileCount.close();
+			
+			return num_of_lines;
 	}
 	
 	public static int CountDigits(String [] stringArray){
@@ -284,7 +338,7 @@ public class file_analysis {
 				}
 			}
 		}
-		System.out.println(uppercaseCount);
+
 		return uppercaseCount;
 	}
 	
