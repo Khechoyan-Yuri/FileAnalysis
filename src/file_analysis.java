@@ -1,3 +1,8 @@
+import java.util.Scanner;					//Imports Scanner Utility
+import java.io.*;							//Imports IO Utility
+import java.util.ArrayList;					//Imports ArrayList Utility
+import java.util.Arrays;					//Imports Arrays Utility
+
 /* ========================================================================== */
 
 /*	PROGRAM List of Stocks
@@ -141,9 +146,6 @@ ASSUMPTIONS
 //*******************************
 //*START OF file_analysis CLASS	*
 //*******************************
-import java.util.Scanner;					//Imports Scanner Utility
-import java.io.*;							//Imports IO Utility
-import java.util.ArrayList;					//Imports ArrayList Utility
 
 public class file_analysis {
 
@@ -158,13 +160,10 @@ public class file_analysis {
 		inputFileName = input.nextLine();
 		//Destroys the scanner object after file import - scanner is no longer needed
 		input.close();
-		
 		//This creates a String Array for the readInputFile Method
 		String stringArray[] = readInputFile(inputFileName);
-		
 		//Creates a String Array List
 		ArrayList<String> stringArrayList = new ArrayList<String>();
-		
 		//The 'wordArray' String Array counts the amount of words used in program
 		//It splits the words based on on: , ; . and (white-space)
 		for(int i=0; i<stringArray.length; i++) {
@@ -173,52 +172,11 @@ public class file_analysis {
 				stringArrayList.add(wordArray[j]);
 			}
 		}
-		//This initializes the upper-case letters that are inside of the 'stringArray' 
+		//This initializes the upper-case letters that are inside of the 'stringArray'
 		int uppercaseCount = countUpperCaseLetters(stringArray);
 		
-		
-		String doubleArray[][] = new String [stringArrayList.size()][2];
-		int frequencyCount = 0;
-		boolean ifDoesNotExist = true;
-		int place=0;
-		
-		for(int i=0; i<stringArrayList.size(); i++) {
-			for(int j=0; j<doubleArray[i].length; j++) {
-				if(doubleArray[i][0] != null && doubleArray[i][0].equals(stringArrayList.get(j))) {
-					ifDoesNotExist = false;
-				}
-			}
-			
-			if(ifDoesNotExist) {
-				doubleArray[place][0] = stringArrayList.get(i);
-				place++;
-			}
-			
-			ifDoesNotExist = true;
-			
-		}
-		
-		for(int i=0; i<stringArrayList.size(); i++) {
-			for(int j=0; j<doubleArray.length; j++) {
-				if(doubleArray[i][0].equals(stringArrayList.get(j))) {
-					frequencyCount++;
-				}
-			}
-			doubleArray[i][1] = Integer.toString(frequencyCount++);
-			frequencyCount =0;
-		}
-			String[] trackWord = new String [100];
-			
-		
-		for(int i =0; i<doubleArray.length; i++) {
-			for(int j = 0; j< trackWord.length; j++){
-				if(trackWord[i] != null && trackWord[i].equals(stringArrayList.get(j))) {
-					ifDoesNotExist = false;
-			}
-			
-			}
-			//System.out.println(doubleArray[i][0]+": "+doubleArray[i][1]);
-		}
+		String doubleArray[][] = countWordFrequency(stringArrayList);
+
 		
 	}//Closes Main Method
 	
@@ -260,7 +218,7 @@ public class file_analysis {
 		return digitCount;
 	}
 	
-	public static int CountWords(String [] stringArray) {
+	public static int countWords(String [] stringArray) {
 		int wordCount =0;
 		for(int i=0; i<stringArray.length; i++) {
 			String [] wordArray = stringArray[i].split("[, . ; \\s]+");
@@ -295,6 +253,7 @@ public class file_analysis {
 		for(int i=0; i<stringArray.length; i++) {
 			for(int j=0; j<stringArray[i].length(); j++) {
 				if(stringArray[i].charAt(j) == ',' ||stringArray[i].charAt(j) == ';'
+						
 						|| stringArray[i].charAt(j) == '.') {
 						punctuationCount++;
 				}
@@ -328,4 +287,62 @@ public class file_analysis {
 		System.out.println(uppercaseCount);
 		return uppercaseCount;
 	}
-}//Closes file_analysis Class
+	
+	public static  String [][] countWordFrequency(ArrayList<String>stringArrayList) {
+		String doubleArray[][] = new String [stringArrayList.size()][2];
+		int frequencyCount = 0;
+		boolean ifDoesNotExist = true;
+		int place=0;
+		
+		for(int i=0; i<stringArrayList.size(); i++) {
+			for(int j=0; j<doubleArray[i].length; j++) {
+				if(doubleArray[i][0] != null && doubleArray[i][0].equals(stringArrayList.get(j))) {
+					ifDoesNotExist = false;
+				}
+			}
+			
+			if(ifDoesNotExist) {
+				doubleArray[place][0] = stringArrayList.get(i);
+				place++;
+			}
+			
+			ifDoesNotExist = true;
+			
+		}
+		
+		for(int i=0; i<stringArrayList.size(); i++) {
+			for(int j=0; j<doubleArray.length; j++) {
+				if(doubleArray[i][0].equals(stringArrayList.get(j))) {
+					frequencyCount++;
+				}
+			}
+			doubleArray[i][1] = Integer.toString(frequencyCount++);
+			frequencyCount =0;
+		}	
+		
+		String [] wordArray = new String [doubleArray.length];
+		String [] numberArray = new String [doubleArray.length];
+		
+		for(int i=0; i<numberArray.length; i++){
+			wordArray[i] = doubleArray[i][0];
+			numberArray[i] = doubleArray[i][1];
+		}
+		
+		Arrays.sort(wordArray);
+		Arrays.sort(numberArray);
+		
+		String [][] returnArray = new String[numberArray.length][2];
+		place = 0;
+		for(int i =0; i<returnArray.length; i++) {
+			if((i-1>=0 && !(wordArray[i].equals(wordArray[i-1])))|| i==0) {
+				returnArray[place][0] = wordArray[i];
+				returnArray[place][1] = numberArray[i];
+				place++;
+			}
+		}
+		
+		return returnArray;
+	}
+
+}
+
