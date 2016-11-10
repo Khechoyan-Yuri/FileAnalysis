@@ -1,11 +1,6 @@
-import java.util.Scanner;					//Imports Scanner Utility
-import java.io.*;							//Imports IO Utility
-import java.util.ArrayList;					//Imports ArrayList Utility
-import java.util.Arrays;					//Imports Arrays Utility
-
 /* ========================================================================== */
 
-/*	PROGRAM List of Stocks
+/*	PROGRAM File Analysis
     AUTHOR: Yuri Khechoyan & Jessie Wilkins
     COURSE NUMBER: CIS 210
     COURSE SECTION NUMBER: 01
@@ -147,6 +142,11 @@ ASSUMPTIONS
 //*START OF file_analysis CLASS	*
 //*******************************
 
+import java.util.Scanner;					//Imports Scanner Utility
+import java.io.*;							//Imports IO Utility
+import java.util.ArrayList;					//Imports ArrayList Utility
+import java.util.Arrays;					//Imports Arrays Utility
+
 public class file_analysis {
 
 	public static void main(String[] args) throws IOException {
@@ -175,7 +175,7 @@ public class file_analysis {
 		//This initializes the upper-case letters that are inside of the 'stringArray'
 		int uppercaseCount = countUpperCaseLetters(stringArray);
 		
-		String doubleArray[][] = countWordFrequency(stringArrayList);
+		String doubleArray[][] = CountWordFrequency(stringArrayList);
 
 		
 	}//Closes Main Method
@@ -218,7 +218,7 @@ public class file_analysis {
 		return digitCount;
 	}
 	
-	public static int countWords(String [] stringArray) {
+	public static int CountWords(String [] stringArray) {
 		int wordCount =0;
 		for(int i=0; i<stringArray.length; i++) {
 			String [] wordArray = stringArray[i].split("[, . ; \\s]+");
@@ -288,7 +288,7 @@ public class file_analysis {
 		return uppercaseCount;
 	}
 	
-	public static  String [][] countWordFrequency(ArrayList<String>stringArrayList) {
+	public static  String [][] CountWordFrequency(ArrayList<String>stringArrayList) {
 		String doubleArray[][] = new String [stringArrayList.size()][2];
 		int frequencyCount = 0;
 		boolean ifDoesNotExist = true;
