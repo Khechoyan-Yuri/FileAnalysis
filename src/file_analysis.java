@@ -145,7 +145,7 @@ ASSUMPTIONS
 import java.util.Scanner;					//Imports Scanner Utility
 import java.io.*;							//Imports IO Utility
 import java.util.ArrayList;					//Imports ArrayList Utility
-import java.util.Arrays;					//Imports Arrays Utility
+import java.util.Collections;
 
 public class file_analysis {
 
@@ -172,8 +172,7 @@ public class file_analysis {
 				stringArrayList.add(wordArray[j]);
 			}
 		}
-		//This stores the upper-case letters inside of the 'stringArray' to the uppercaseCount var.
-		//calls countUpperCaseLetters method
+		//This initializes the upper-case letters that are inside of the 'stringArray'
 		int uppercaseCount = countUpperCaseLetters(stringArray);
 		
 		//This stores the word frequency inside of the 'stringArray' to the doubleArray var.
@@ -212,47 +211,68 @@ public class file_analysis {
 		//calls outputData method
 		outputData(uppercaseCount, doubleArray, stringArray, wordCounter, digitCounter, alphCounter, sentenceCounter, punctCounter, whitespaceCounter, lineCounter);
 	
-	
 	}//***********Closes Main Method**************
 	
-	
-	//This outputData method is used to print all of the information gathered, to the console
-	public static void outputData(int uppercaseCount,  String doubleArray[][], String [] stringArray, int wordCounter, int digitCounter, int alphCounter, int sentenceCounter, int punctCounter, int whitespaceCounter, int lineCounter){
-		
+	/**
+	 * This outputData method is used to print all 
+	 * of the information gathered, to the console
+	 * @param uppercaseCount
+	 * @param doubleArray
+	 * @param stringArray
+	 * @param wordCounter
+	 * @param digitCounter
+	 * @param alphCounter
+	 * @param sentenceCounter
+	 * @param punctCounter
+	 * @param whitespaceCounter
+	 * @param lineCounter
+	 */
+	public static void outputData(int uppercaseCount,  String doubleArray[][], String [] stringArray, int wordCounter,
+									int digitCounter, int alphCounter, int sentenceCounter, 
+									int punctCounter, int whitespaceCounter, int lineCounter) throws IOException{
+		PrintWriter output = new PrintWriter("output.txt");
 		//This for loop makes sure that while the counter is less than the length of the stringArray, 
 		//to print the length of what is in the document
 		for(int i=0; i < stringArray.length; i++){
-		//This prints out the full document to the console
-			System.out.println(stringArray[i]);
+			//This prints out the full document to the console
+			output.print(stringArray[i]+"\r\n");
 		}
 		
 		//*******************************
-		//	ALL	OUTPUTS TO CONSOLE		*
+		//	ALL	OUTPUTS TO FILE		*
 		//*******************************
 		
+		output.print("-----------------------------------------------------------\r\n");
 		
-		System.out.println("-----------------------------------------------------------");
+		output.print("Total number of lines in the files: " +lineCounter+"\r\n");
+		output.print("Total number of words in the files: " +wordCounter+"\r\n");
+		output.print("Total number of sentences in the files: " +sentenceCounter+"\r\n");
+		output.print("Total number of punctuations in the files: " +punctCounter+"\r\n");
+		output.print("Total number of alphabets in the files: " +alphCounter+"\r\n");
+		output.print("Total number of digits in the files: " +digitCounter+"\r\n");
+		output.print("Total number of whitespaces in the files: " +whitespaceCounter+"\r\n");
+		output.print("Total number of uppercase in the files: " +uppercaseCount+"\r\n");
 		
-		System.out.println("Total number of lines in the files: " +lineCounter);
-		System.out.println("Total number of words in the files: " +wordCounter);
-		System.out.println("Total number of sentences in the files: " +sentenceCounter);
-		System.out.println("Total number of punctuations in the files: " +punctCounter);
-		System.out.println("Total number of alphabets in the files: " +alphCounter);
-		System.out.println("Total number of digits in the files: " +digitCounter);
-		System.out.println("Total number of whitespaces in the files: " +whitespaceCounter);
-		System.out.println("Total number of uppercase in the files: " +uppercaseCount);
-		
-		System.out.println("-----------------------------------------------------------");
+		output.print("-----------------------------------------------------------\r\n");
 		
 		//This for loop will print out the frequency of words to the console
-		//while the counter is less than the length of the doubleArray
+			//while the counter is less than the length of the doubleArray
 		for(int i=0; i < doubleArray.length; i++){
-			System.out.println(doubleArray[i][0]+": "+doubleArray[i][1]);
+			//if the element of the array is empty or null
+			if(doubleArray[i][0] != null) {
+				output.println(doubleArray[i][0]+": "+doubleArray[i][1]+"\r\n");
+			}
 		}
-	
+		output.close();
 	}//Closes outputData method
 	
-	//readInputFile is designed to only read i the information from the file that is imported
+	/**
+	 * readInputFile is designed to only read 
+	 * i the information from the file that is imported
+	 * @param inputFileName
+	 * @return
+	 * @throws IOException
+	 */
 	public static String[] readInputFile (String inputFileName) throws IOException {
 		int num_of_lines = 0;
 		
@@ -269,12 +289,14 @@ public class file_analysis {
 		//Close the fileCount object
 		fileCount.close();
 		
-		//This scanner reads in the num_of_lines from fileCount and stores it into a string array
+		//This scanner reads in the num_of_lines 
+		//from fileCount and stores it into a string array
 		Scanner fileInput = new Scanner(f);
 		String [] stringArray = new String[num_of_lines];
 		int i = 0;
 		
-		//This increments the String Array while it has more lines of data that need to be read
+		//This increments the String Array while it 
+		//has more lines of data that need to be read
 		while(fileInput.hasNextLine()) {
 			stringArray[i] = fileInput.nextLine();
 			i++;
@@ -285,8 +307,14 @@ public class file_analysis {
 		return stringArray;
 	}//Closes readInputFile method
 	
-	//countLines method counts the amount of lines that were 
-	//in the file (that were stored into num_of_lines
+	/**
+	 * countLines method counts the amount of lines that were 
+	 * in the file (that were stored into num_of_lines
+	 * @param stringArray
+	 * @param inputFileName
+	 * @return
+	 * @throws IOException
+	 */
 	public static int countLines(String [] stringArray, String inputFileName) throws IOException{
 			int num_of_lines = 0;
 			
@@ -302,7 +330,12 @@ public class file_analysis {
 			return num_of_lines;
 	}//Closes countLines method
 	
-	//CountDigits is designed to count the number of digits that were inside of the imported file
+	/**
+	 * CountDigits is designed to count the number 
+	 * of digits that were inside of the imported file
+	 * @param stringArray
+	 * @return
+	 */
 	public static int CountDigits(String [] stringArray){
 		int digitCount = 0;
 		for(int i =0; i<stringArray.length; i++) {
@@ -315,29 +348,45 @@ public class file_analysis {
 		return digitCount;
 	}//Closes CountDigits method
 	
-	//CountWords method is used to count the amount of words in the the file
-	//words are separated by the comma, period, and semi-colon
+	/**
+	 * CountWords method is used to count the amount of words in the the file
+	 * words are separated by the comma, period, and semi-colon
+	 * @param stringArray
+	 * @return
+	 */
 	public static int CountWords(String [] stringArray) {
 		int wordCount =0;
 		for(int i=0; i<stringArray.length; i++) {
-			String [] wordArray = stringArray[i].split("[, . ; \\s]+");
+			String [] wordArray = stringArray[i].split("[,.;\\s]+");
 			wordCount +=wordArray.length;
 		}
 		return wordCount;
 	}//Closes CountWords method
 	
-	// countSentences method is used to the amount of sentences there are in the imported file
-	//number of sentences will be determined by the ending punctuation
+	/**
+	 * countSentences method is used to the amount of sentences there are in the imported file
+	 * number of sentences will be determined by the ending punctuation
+	 * @param stringArray
+	 * @return
+	 */
 	public static int countSentences(String [] stringArray) {
 		int sentenceCount = 0;
 		for(int i=0; i<stringArray.length; i++) {
-			String [] sentenceArray = stringArray[i].split("[. ; ]+");
-			sentenceCount +=sentenceArray.length;
+			for(int j=0; j<stringArray[i].length(); j++) {
+				if(stringArray[i].charAt(j) == '.') {
+					sentenceCount++;
+				}
+			}
 		}
-		return sentenceCount;
+		return sentenceCount++;
 	}//Closes countSetences method
 	
-	//countLetters method is used to determine the amount of letters that are in the imported file
+	/**
+	 * countPunctuation method will be used to calculate the number of punctuation
+	 * if he letters equal to , or . or ; - they are considered punctuation
+	 * @param stringArray
+	 * @return
+	 */
 	public static int countLetters(String [] stringArray) {
 		int letterCount = 0;
 		for(int i=0; i<stringArray.length; i++) {
@@ -348,25 +397,28 @@ public class file_analysis {
 			}
 		}
 		return letterCount;
-	}//Closes countLetters method
+	}//Closes countPunctuation method
 	
-	//countPunctuation method will be used to calculate the number of punctuation
-	//if he letters equal to , or . or ; - they are considered punctuation
 	public static int countPunctuation(String [] stringArray) {
+		String punctuation = new String(",;.'\"*()&^%$#@!|\\/:+=-_`~?");
 		int punctuationCount = 0;
 		for(int i=0; i<stringArray.length; i++) {
+			
 			for(int j=0; j<stringArray[i].length(); j++) {
-				if(stringArray[i].charAt(j) == ',' ||stringArray[i].charAt(j) == ';'
-						
-						|| stringArray[i].charAt(j) == '.') {
+				String punctHolder = Character.toString(stringArray[i].charAt(j));
+				if(punctuation.contains(punctHolder)) {
 						punctuationCount++;
 				}
 			}
 		}
 		return punctuationCount++;
-	}//Closes countPunctuation method
+	}
 	
-	//This method is used to count the white-spaces in between words
+	/**
+	 * This method is used to count the white-spaces in between words
+	 * @param stringArray
+	 * @return
+	 */
 	public static int countWhitespace(String [] stringArray) {
 		int whitespaceCount = 0;
 		for(int i=0; i<stringArray.length; i++) {
@@ -379,7 +431,11 @@ public class file_analysis {
 		
 		return whitespaceCount;
 	}
-	//This method is used to count the amount of upper case letters
+	/**This method is used to count the amount of upper case letters
+	 * 
+	 * @param stringArray
+	 * @return
+	 */
 	public static int countUpperCaseLetters(String [] stringArray) {
 		int uppercaseCount = 0;
 		for(int i = 0; i<stringArray.length; i++) {
@@ -393,34 +449,30 @@ public class file_analysis {
 		return uppercaseCount;
 	}//Closes countUpperCaseLetters method
 	
-	//This final method is used to count the frequency of the words that are inside of the imported file
+	/**
+	 * This final method is used to count the frequency of the words 
+	 * that are inside of the imported file
+	 * @param stringArrayList
+	 * @return
+	 */
 	public static  String [][] CountWordFrequency(ArrayList<String>stringArrayList) {
+		Collections.sort(stringArrayList);
 		String doubleArray[][] = new String [stringArrayList.size()][2];
 		int frequencyCount = 0;
-		boolean ifDoesNotExist = true;
 		int place=0;
 		//if the size of the stringArray is greater than 'i' AND the frequency of the word is not null,
 		//then the letter already exists in the imported file
 		for(int i=0; i<stringArrayList.size(); i++) {
-			for(int j=0; j<doubleArray[i].length; j++) {
-				if(doubleArray[i][0] != null && doubleArray[i][0].equals(stringArrayList.get(j))) {
-					ifDoesNotExist = false;
+				if((i-1 >= 0 && !(stringArrayList.get(i-1).equals(stringArrayList.get(i))) || i==0)) {
+					doubleArray[place][0] = stringArrayList.get(i);
+					place++;
 				}
 			}
-			
-			if(ifDoesNotExist) {
-				doubleArray[place][0] = stringArrayList.get(i);
-				place++;
-			}
-			
-			ifDoesNotExist = true;
-			
-		}
 		//if the stringArray and double array are both greater than the counters, 
 		//then add 1 to the amount of times the word appears
 		for(int i=0; i<stringArrayList.size(); i++) {
 			for(int j=0; j<doubleArray.length; j++) {
-				if(doubleArray[i][0].equals(stringArrayList.get(j))) {
+				if(doubleArray[i][0] != null && doubleArray[i][0].equals(stringArrayList.get(j))) {
 					frequencyCount++;
 				}
 			}
@@ -428,29 +480,8 @@ public class file_analysis {
 			frequencyCount =0;
 		}	
 		
-		String [] wordArray = new String [doubleArray.length];
-		String [] numberArray = new String [doubleArray.length];
 		
-		for(int i=0; i<numberArray.length; i++){
-			wordArray[i] = doubleArray[i][0];
-			numberArray[i] = doubleArray[i][1];
-		}
-		
-		Arrays.sort(wordArray);
-		Arrays.sort(numberArray);
-		
-		String [][] returnArray = new String[numberArray.length][2];
-		place = 0;
-		for(int i =0; i<returnArray.length; i++) {
-			if((i-1>=0 && !(wordArray[i].equals(wordArray[i-1])))|| i==0) {
-				returnArray[place][0] = wordArray[i];
-				returnArray[place][1] = numberArray[i];
-				place++;
-			}
-		}
-		
-		return returnArray;
+		return doubleArray;
 	}//Closes CountWordFrequency method
 
 }//Closes file_analysis Class
-
