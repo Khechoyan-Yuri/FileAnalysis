@@ -177,7 +177,7 @@ public class file_analysis {
 		
 		//This stores the word frequency inside of the 'stringArray' to the doubleArray var.
 		//calls countWordFrequency method
-		String doubleArray[][] = CountWordFrequency(stringArrayList);
+		String wordFreqArray[][] = CountWordFrequency(stringArrayList);
 		
 		//This stores the word count inside of the 'stringArray' to the wordCounter var.
 		//calls CountWords method
@@ -209,7 +209,7 @@ public class file_analysis {
 		
 		//This stores all of the data that was stored into vars above, into a single var with those exact parameters
 		//calls outputData method
-		outputData(uppercaseCount, doubleArray, stringArray, wordCounter, digitCounter, alphCounter, sentenceCounter, punctCounter, whitespaceCounter, lineCounter);
+		outputData(uppercaseCount, wordFreqArray, stringArray, wordCounter, digitCounter, alphCounter, sentenceCounter, punctCounter, whitespaceCounter, lineCounter);
 	
 	}//***********Closes Main Method**************
 	
@@ -230,6 +230,8 @@ public class file_analysis {
 	public static void outputData(int uppercaseCount,  String doubleArray[][], String [] stringArray, int wordCounter,
 									int digitCounter, int alphCounter, int sentenceCounter, 
 									int punctCounter, int whitespaceCounter, int lineCounter) throws IOException{
+		
+		//Ths creates an output.txt file for the data to be stored into
 		PrintWriter output = new PrintWriter("output.txt");
 		//This for loop makes sure that while the counter is less than the length of the stringArray, 
 		//to print the length of what is in the document
@@ -238,9 +240,9 @@ public class file_analysis {
 			output.print(stringArray[i]+"\r\n");
 		}
 		
-		//*******************************
+		//***************************
 		//	ALL	OUTPUTS TO FILE		*
-		//*******************************
+		//***************************
 		
 		output.print("-----------------------------------------------------------\r\n");
 		
@@ -255,6 +257,8 @@ public class file_analysis {
 		
 		output.print("-----------------------------------------------------------\r\n");
 		
+		//====================================================================================
+		
 		//This for loop will print out the frequency of words to the console
 			//while the counter is less than the length of the doubleArray
 		for(int i=0; i < doubleArray.length; i++){
@@ -268,7 +272,7 @@ public class file_analysis {
 	
 	/**
 	 * readInputFile is designed to only read 
-	 * i the information from the file that is imported
+	 * in the information from the file that is imported
 	 * @param inputFileName
 	 * @return
 	 * @throws IOException
@@ -309,7 +313,7 @@ public class file_analysis {
 	
 	/**
 	 * countLines method counts the amount of lines that were 
-	 * in the file (that were stored into num_of_lines
+	 * in the file (that were stored into num_of_lines)
 	 * @param stringArray
 	 * @param inputFileName
 	 * @return
@@ -364,8 +368,9 @@ public class file_analysis {
 	}//Closes CountWords method
 	
 	/**
-	 * countSentences method is used to the amount of sentences there are in the imported file
-	 * number of sentences will be determined by the ending punctuation
+	 * countSentences method is used to calculate the amount of sentences
+	 * that are in the imported file. Number of sentences
+	 * will be determined by the ending punctuation
 	 * @param stringArray
 	 * @return
 	 */
@@ -383,7 +388,7 @@ public class file_analysis {
 	
 	/**
 	 * countPunctuation method will be used to calculate the number of punctuation
-	 * if he letters equal to , or . or ; - they are considered punctuation
+	 * if the letters equal to , or . or ; - they are considered punctuation
 	 * @param stringArray
 	 * @return
 	 */
@@ -431,8 +436,8 @@ public class file_analysis {
 		
 		return whitespaceCount;
 	}
+	
 	/**This method is used to count the amount of upper case letters
-	 * 
 	 * @param stringArray
 	 * @return
 	 */
