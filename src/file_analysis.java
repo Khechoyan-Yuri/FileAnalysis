@@ -145,7 +145,7 @@ ASSUMPTIONS
 import java.util.Scanner;					//Imports Scanner Utility
 import java.io.*;							//Imports IO Utility
 import java.util.ArrayList;					//Imports ArrayList Utility
-import java.util.Collections;
+import java.util.Collections;				//Imports Collections Utility
 
 public class file_analysis {
 
@@ -162,16 +162,9 @@ public class file_analysis {
 		input.close();
 		//This creates a String Array for the readInputFile Method
 		String stringArray[] = readInputFile(inputFileName);
-		//Creates a String Array List
-		ArrayList<String> stringArrayList = new ArrayList<String>();
-		//The 'wordArray' String Array counts the amount of words used in program
-		//It splits the words based on on: , ; . and (white-space)
-		for(int i=0; i<stringArray.length; i++) {
-			String [] wordArray = stringArray[i].toLowerCase().split("[,;.\\s]+");
-			for(int j=0; j<wordArray.length; j++) {
-				stringArrayList.add(wordArray[j]);
-			}
-		}
+		
+		ArrayList<String> stringArrayList = convertToArrayList(stringArray);
+		
 		//This initializes the upper-case letters that are inside of the 'stringArray'
 		int uppercaseCount = countUpperCaseLetters(stringArray);
 		
@@ -214,6 +207,83 @@ public class file_analysis {
 	}//***********Closes Main Method**************
 	
 	/**
+	 * Converts the string array into an array list that contains each word
+	 * in each element.
+	 * @param stringArray
+	 * @return
+	 */
+	public static ArrayList<String> convertToArrayList(String stringArray[]) {
+		//Creates a String Array List
+		ArrayList<String> stringArrayList = new ArrayList<String>();
+		//The 'wordArray' String Array counts the amount of words used in program
+		//It splits the words based on : certain punctuations and (white-space).
+		//It also splits contractions into two words each.
+		for(int i=0; i<stringArray.length; i++) {
+			//Splits the stringArray element into sub strings of string array based on the given characters
+			String [] wordArray = stringArray[i].toLowerCase().split("[!?\\/*+=:,.;\\s]+");
+			//While j is less than the word array's length
+			for(int j=0; j<wordArray.length; j++) {		//j is set to 0 and incremented
+				//if the word array contains "'t", then it splits it into two words:
+				//first part of word and "not" and adds it to the array list
+				if(wordArray[j].contains("'t")){
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("not");
+				}
+				//if the word array contains "'s", then it splits it into two words:
+				//first part of word and "is" and adds it to the array list
+				else if(wordArray[j].contains("'s")) {
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("is");
+				}
+				//if the word array contains "'re", then it splits it into two words:
+				//first part of word and "are" and adds it to the array list
+				else if(wordArray[j].contains("'re")) {
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("are");
+				}
+				//if the word array contains "'m", then it splits it into two words:
+				//first part of word and "am" and adds it to the array list
+				else if(wordArray[j].contains("'m")) {
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("am");
+				}
+				//if the word array contains "'ll", then it splits it into two words:
+				//first part of word and "will" and adds it to the array list
+				else if(wordArray[j].contains("'ll")) {
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("will");
+				}
+				//if the word array contains "'d", then it splits it into two words:
+				//first part of word and "would" and adds it to the array list
+				else if(wordArray[j].contains("'d")) {
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("would");
+				}
+				//if the word array contains "'ve", then it splits it into two words:
+				//first part of word and "have" and adds it to the array list
+				else if(wordArray[j].contains("'ve")) {
+					String contractionWords [] = wordArray[j].split("[']");
+					stringArrayList.add(contractionWords[0]);
+					stringArrayList.add("have");
+				}
+				//if all other conditions fail, just add the word to the array list
+				else {
+					stringArrayList.add(wordArray[j]);
+				}
+			}//Close inner for loop
+		}//Close outer for loop
+		
+		//Return the array list
+		return stringArrayList;
+	}
+	
+	/**
 	 * This outputData method is used to print all 
 	 * of the information gathered, to the console
 	 * @param uppercaseCount
@@ -227,10 +297,9 @@ public class file_analysis {
 	 * @param whitespaceCounter
 	 * @param lineCounter
 	 */
-	public static void outputData(int uppercaseCount,  String doubleArray[][], String [] stringArray, int wordCounter,
+	public static void outputData(int uppercaseCount,  String wordFreqArray[][], String [] stringArray, int wordCounter,
 									int digitCounter, int alphCounter, int sentenceCounter, 
 									int punctCounter, int whitespaceCounter, int lineCounter) throws IOException{
-		
 		//Ths creates an output.txt file for the data to be stored into
 		PrintWriter output = new PrintWriter("output.txt");
 		//This for loop makes sure that while the counter is less than the length of the stringArray, 
@@ -261,10 +330,10 @@ public class file_analysis {
 		
 		//This for loop will print out the frequency of words to the console
 			//while the counter is less than the length of the doubleArray
-		for(int i=0; i < doubleArray.length; i++){
+		for(int i=0; i < wordFreqArray.length; i++){
 			//if the element of the array is empty or null
-			if(doubleArray[i][0] != null) {
-				output.println(doubleArray[i][0]+": "+doubleArray[i][1]+"\r\n");
+			if(wordFreqArray[i][0] != null) {
+				output.println(wordFreqArray[i][0]+": "+wordFreqArray[i][1]+"\r\n");
 			}
 		}
 		output.close();
@@ -278,13 +347,14 @@ public class file_analysis {
 	 * @throws IOException
 	 */
 	public static String[] readInputFile (String inputFileName) throws IOException {
+		//Declares and initializes the integer variable representing the number of lines
 		int num_of_lines = 0;
 		
 		//This creates the scanner to read in the data from the file
 		File f = new File(inputFileName);
 		Scanner fileCount = new Scanner(f);
 		
-		//while there is a next line of text, 
+		//While there is a next line of text, 
 		//count that towards the total number of lines in the file
 		while(fileCount.hasNextLine()) {
 			fileCount.nextLine();
@@ -297,6 +367,7 @@ public class file_analysis {
 		//from fileCount and stores it into a string array
 		Scanner fileInput = new Scanner(f);
 		String [] stringArray = new String[num_of_lines];
+		//This declares and initializes to zero the integer variable representing the counter
 		int i = 0;
 		
 		//This increments the String Array while it 
@@ -320,48 +391,61 @@ public class file_analysis {
 	 * @throws IOException
 	 */
 	public static int countLines(String [] stringArray, String inputFileName) throws IOException{
+			//Declares and initializes to zero the integer variable representing the number of lines
 			int num_of_lines = 0;
 			
+			//Creates the input file to be used for counting the lines
 			File f = new File(inputFileName);
 			Scanner fileCount = new Scanner(f);
 			
+			//Counts the number of lines in a file while there is a next line
 			while(fileCount.hasNextLine()) {
+				//Read next line of file
 				fileCount.nextLine();
+				//Increment line counter
 				num_of_lines++;
 			}
+			//Close the input file for counting
 			fileCount.close();
 			
+			//Returns the number of lines
 			return num_of_lines;
 	}//Closes countLines method
 	
 	/**
 	 * CountDigits is designed to count the number 
-	 * of digits that were inside of the imported file
+	 * of digits that were inside the imported file
 	 * @param stringArray
 	 * @return
 	 */
 	public static int CountDigits(String [] stringArray){
+		//Declares and initializes to zero the integer variable that counts the digits
 		int digitCount = 0;
-		for(int i =0; i<stringArray.length; i++) {
-			for(int j =0; j<stringArray[i].length(); j++) {
+		
+		//Counts the number of digits while i is less than the stringArray's length
+		for(int i =0; i<stringArray.length; i++) {	//i starts at zero and increments
+			//While j is less than string array
+			for(int j =0; j<stringArray[i].length(); j++) {	//j starts at zero and increments
+				//if the character at the current element is a digit, increment the digit counter
 				if(Character.isDigit(stringArray[i].charAt(j))) {
 					digitCount++;
 				}
 			}
 		}
+		//Returns the number of digits
 		return digitCount;
 	}//Closes CountDigits method
 	
 	/**
 	 * CountWords method is used to count the amount of words in the the file
-	 * words are separated by the comma, period, and semi-colon
+	 * words are separated by the comma, period, semi-colon, and whitespace
 	 * @param stringArray
 	 * @return
 	 */
 	public static int CountWords(String [] stringArray) {
 		int wordCount =0;
 		for(int i=0; i<stringArray.length; i++) {
-			String [] wordArray = stringArray[i].split("[,.;\\s]+");
+			String [] wordArray = stringArray[i].split("[!?\\/*+=:,.;'\\s]+");
 			wordCount +=wordArray.length;
 		}
 		return wordCount;
@@ -369,8 +453,8 @@ public class file_analysis {
 	
 	/**
 	 * countSentences method is used to calculate the amount of sentences
-	 * that are in the imported file. Number of sentences
-	 * will be determined by the ending punctuation
+ 	 * that are in the imported file. Number of sentences
+ 	 * will be determined by the ending punctuation
 	 * @param stringArray
 	 * @return
 	 */
@@ -388,7 +472,7 @@ public class file_analysis {
 	
 	/**
 	 * countPunctuation method will be used to calculate the number of punctuation
-	 * if the letters equal to , or . or ; - they are considered punctuation
+	 * if he letters equal to , or . or ; - they are considered punctuation
 	 * @param stringArray
 	 * @return
 	 */
@@ -403,7 +487,12 @@ public class file_analysis {
 		}
 		return letterCount;
 	}//Closes countPunctuation method
-	
+	/**
+  	 * countPunctuation method will be used to calculate the number of punctuation
+  	 * based on given criteria for what is punctuation.
+  	 * @param stringArray
+  	 * @return
+  	 */
 	public static int countPunctuation(String [] stringArray) {
 		String punctuation = new String(",;.'\"*()&^%$#@!|\\/:+=-_`~?");
 		int punctuationCount = 0;
@@ -436,8 +525,8 @@ public class file_analysis {
 		
 		return whitespaceCount;
 	}
-	
-	/**This method is used to count the amount of upper case letters
+	/**
+	 * This method is used to count the amount of upper case letters
 	 * @param stringArray
 	 * @return
 	 */
@@ -445,7 +534,7 @@ public class file_analysis {
 		int uppercaseCount = 0;
 		for(int i = 0; i<stringArray.length; i++) {
 			for(int j =0; j<stringArray[i].length(); j++) {
-				if(((j -1 >=0 && stringArray[i].charAt(j-1) == ' ') || (j==0))  && Character.isUpperCase(stringArray[i].charAt(j))) {
+				if(Character.isUpperCase(stringArray[i].charAt(j))) {
 					uppercaseCount++;
 				}
 			}
@@ -461,32 +550,41 @@ public class file_analysis {
 	 * @return
 	 */
 	public static  String [][] CountWordFrequency(ArrayList<String>stringArrayList) {
+		//
 		Collections.sort(stringArrayList);
-		String doubleArray[][] = new String [stringArrayList.size()][2];
+		String wordFreqArray[][] = new String [stringArrayList.size()][2];
 		int frequencyCount = 0;
 		int place=0;
-		//if the size of the stringArray is greater than 'i' AND the frequency of the word is not null,
-		//then the letter already exists in the imported file
-		for(int i=0; i<stringArrayList.size(); i++) {
+		//while i is greater than the size of the stringArray 
+		for(int i=0; i<stringArrayList.size(); i++) {	//i equals zero and increments
+				//if the last element does not equal the current element or current element
+				//location is equal to zero, then add to the word frequency array
 				if((i-1 >= 0 && !(stringArrayList.get(i-1).equals(stringArrayList.get(i))) || i==0)) {
-					doubleArray[place][0] = stringArrayList.get(i);
+					wordFreqArray[place][0] = stringArrayList.get(i);
+					//increment placeholder for array
 					place++;
 				}
-			}
-		//if the stringArray and double array are both greater than the counters, 
-		//then add 1 to the amount of times the word appears
-		for(int i=0; i<stringArrayList.size(); i++) {
-			for(int j=0; j<doubleArray.length; j++) {
-				if(doubleArray[i][0] != null && doubleArray[i][0].equals(stringArrayList.get(j))) {
+		}
+		
+		//while i is greater than the size of the stringArray 
+		for(int i=0; i<stringArrayList.size(); i++) {	//i equals zero and increments
+			//while j is greater than the size of the wordFreqArray
+			for(int j=0; j<wordFreqArray.length; j++) {	//j equals zero and increments
+				//if the element of the wordFreqArray is not empty or null
+				//and the current wordFreqArray element equals the string array list element,
+				//increment the frequency count
+				if(wordFreqArray[i][0] != null && wordFreqArray[i][0].equals(stringArrayList.get(j))) {
 					frequencyCount++;
 				}
 			}
-			doubleArray[i][1] = Integer.toString(frequencyCount++);
+			//Add the frequency count to the second dimension of the 
+			//wordFreqArray and reset to 0
+			wordFreqArray[i][1] = Integer.toString(frequencyCount++);
 			frequencyCount =0;
 		}	
 		
-		
-		return doubleArray;
+		//Return wordFreqArray
+		return wordFreqArray;
 	}//Closes CountWordFrequency method
 
 }//Closes file_analysis Class
